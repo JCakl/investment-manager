@@ -19,10 +19,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     struct Broker {
         var name = BrokerName.unknown.rawValue
+        
+
     }
     
     class File{
         var broker = Broker()
+        var headerPositions: [[Int32: String]] = [[:]]
+        //var headerPosition: [Int32: String] = [:]
     }
 
 
@@ -38,7 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return true
     }
     
-    func checkHeader( header : String ) -> BrokerName.RawValue {
+    func checkHeader( header : String, file : inout File){
         
         // TODO: set currency via UI
         let currency = "CZK"
@@ -48,29 +52,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let columns = header.split(separator: ",", omittingEmptySubsequences: false)
         
         for broker in BrokerName.allCases {
+            var colIter: Int32 = 0
             for column in columns {
                 if !headerTrading212.contains(String(column)) {
                     break
+                }else{
+                    file.headerPositions.append([colIter:String(column)])
                 }
             }
-            return broker.rawValue
+            file.broker.name = broker.rawValue
+            return
         }
-        
-        return BrokerName.unknown.rawValue
+        file.broker.name = BrokerName.unknown.rawValue
     }
     
     func parseCSVfile( csvFile : String ) -> Bool {
         let lines = csvFile.split(separator: "\n")
         
-        var broker = Broker()
-        broker.name = checkHeader( header : String(lines[0]) )
+        var file = File()
+        checkHeader( header : String(lines[0]), file : &file )
         
-        print("Broker name is <\(broker.name)>")
+        print("Broker name is <\(file.broker.name)>")
         
         for line in lines.dropFirst() {
             let columns = line.split(separator: ",", omittingEmptySubsequences: false)
             
-            // TODO: process columnsß
+            // TODO: process columns
+            //var colIter: Int32 = 0
             /*for column in columns {
                 
             }*/
