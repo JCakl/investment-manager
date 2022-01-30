@@ -19,14 +19,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     struct Broker {
         var name = BrokerName.unknown.rawValue
-        
-
     }
     
     class File{
         var broker = Broker()
         var headerPositions: [[Int32: String]] = [[:]]
-        //var headerPosition: [Int32: String] = [:]
+        var cellStructure: [[String]] = []
     }
 
 
@@ -66,33 +64,35 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         file.broker.name = BrokerName.unknown.rawValue
     }
     
-    func parseCSVfile( csvFile : String ) -> Bool {
+    func parseCSVfile( csvFile : String, file : inout File ) -> Bool {
         let lines = csvFile.split(separator: "\n")
-        
-        var file = File()
+    
+        //var file = File()
+        print("Line cnt <\(lines.count)>")
+
         checkHeader( header : String(lines[0]), file : &file )
         
         print("Broker name is <\(file.broker.name)>")
         
+        var lineIter: Int = 0
         for line in lines.dropFirst() {
             let columns = line.split(separator: ",", omittingEmptySubsequences: false)
-            
-            // TODO: process columns
-            //var colIter: Int32 = 0
-            /*for column in columns {
-                
-            }*/
-            
+            file.cellStructure.append([])
+
+            for column in columns {
+                file.cellStructure[lineIter].append(String(column))
+            }
+            lineIter += 1
         }
         return true
     }
     
-    func processCsvFile( panel: NSOpenPanel ) -> Bool {
+    func processCsvFile( panel: NSOpenPanel, file : inout File ) -> Bool {
         var csvData = ""
-        for file in panel.urls{
+        for url in panel.urls{
             do{
-                csvData = try String(contentsOf: file, encoding: .utf8)
-                if( !parseCSVfile( csvFile: csvData ) ){
+                csvData = try String(contentsOf: url, encoding: .utf8)
+                if( !parseCSVfile( csvFile: csvData, file : &file ) ){
                     return false
                 }
             }catch{
@@ -109,8 +109,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         openPanel.allowsMultipleSelection = true
         openPanel.allowedFileTypes = ["csv"]
         
+        var file: File = File()
+        
         if (openPanel.runModal() == NSApplication.ModalResponse.OK) {
-            if( processCsvFile( panel : openPanel ) ){
+            if( processCsvFile( panel : openPanel, file : &file ) ){
+                print("CNT \(file.cellStructure.count)")
+                for structure in file.cellStructure{
+                    
+                    print("Structure \(structure)")
+                    
+                    for str in structure{
+                        print("Data \(str)")
+                    }
+                }
                 print("CSV file(s) are imported correctly")
             }else{
                 print("CSV file(s) are not imported correctly")
