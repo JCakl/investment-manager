@@ -11,6 +11,8 @@
 		EAC3D8B227A5575C00B3308D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC3D8B127A5575C00B3308D /* ViewController.swift */; };
 		EAC3D8B427A5575D00B3308D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EAC3D8B327A5575D00B3308D /* Assets.xcassets */; };
 		EAC3D8B727A5575D00B3308D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAC3D8B527A5575D00B3308D /* Main.storyboard */; };
+		EAC3D8DF27AEB4CD00B3308D /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC3D8DE27AEB4CD00B3308D /* File.swift */; };
+		EAC3D8E127AEB5CB00B3308D /* Broker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC3D8E027AEB5CB00B3308D /* Broker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +22,8 @@
 		EAC3D8B327A5575D00B3308D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EAC3D8B627A5575D00B3308D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EAC3D8B827A5575D00B3308D /* Investment_tool.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Investment_tool.entitlements; sourceTree = "<group>"; };
+		EAC3D8DE27AEB4CD00B3308D /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		EAC3D8E027AEB5CB00B3308D /* Broker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Broker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +61,8 @@
 				EAC3D8B327A5575D00B3308D /* Assets.xcassets */,
 				EAC3D8B527A5575D00B3308D /* Main.storyboard */,
 				EAC3D8B827A5575D00B3308D /* Investment_tool.entitlements */,
+				EAC3D8DE27AEB4CD00B3308D /* File.swift */,
+				EAC3D8E027AEB5CB00B3308D /* Broker.swift */,
 			);
 			path = "Investment tool";
 			sourceTree = "<group>";
@@ -131,7 +137,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAC3D8E127AEB5CB00B3308D /* Broker.swift in Sources */,
 				EAC3D8B227A5575C00B3308D /* ViewController.swift in Sources */,
+				EAC3D8DF27AEB4CD00B3308D /* File.swift in Sources */,
 				EAC3D8B027A5575C00B3308D /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
