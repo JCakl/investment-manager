@@ -27,6 +27,19 @@ enum Action: String, CaseIterable{
 enum Column: String,CaseIterable{
     case broker = "broker"
     case ticker = "ticker"
+    case name = "name"
+    case cntOfShares = "cnt_of_shares"
+    case sharePrice = "share_price"
+    case currencyShare = "currency_share"
+    case total = "total"
+    case witholdingTax = "witholding_tax"
+    case currencyTax = "currency_tax"
+    case chargeAmount = "charge_amount"
+}
+
+enum ColumnPositionTr212: Int, CaseIterable{
+    case ticker = 3
+    case name = 4
 }
 
 func getItemSeparator( fileType: FileType ) -> Separator{
@@ -107,11 +120,24 @@ class Csv:File{
         data.removeAll()
         for line in fileData.lines {
             var itemCounter = 0
-            data.append([Column.broker.rawValue : getBrokerName(), Column.ticker.rawValue : ""] )
+            data.append([Column.broker.rawValue : getBrokerName(), Column.ticker.rawValue : "", Column.name.rawValue : ""] )
             for item in line.split(separator:  getItemSeparator(fileType: FileType.csv).rawValue, omittingEmptySubsequences: false){
+                /*switch(itemCounter){
+                    case  ColumnPositionTr212.ticker.rawValue:
+                        data[lineCounter].updateValue(String(item), forKey: Column.ticker.rawValue)
+                    case ColumnPositionTr212.name.rawValue:
+                        data[lineCounter].updateValue(String(item), forKey: Column.name.rawValue)
+                default:
+                    continue
+                }*/
+                
                 if( itemCounter == 3 ){
                     data[lineCounter].updateValue(String(item), forKey: Column.ticker.rawValue)
+                }else if( itemCounter == 4 ){
+                    data[lineCounter].updateValue(String(item).replacingOccurrences(of: "\"", with: "", options: NSString.CompareOptions.literal, range: nil), forKey: Column.name.rawValue)
                 }
+                
+                
                 itemCounter += 1
                 //print(itemCounter)
             }

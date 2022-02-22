@@ -41,7 +41,8 @@ extension ViewController: NSTableViewDataSource, NSTableViewDelegate {
        var impViewData = delegate.publicData[row]
         if( delegate.publicData[row].isEmpty ){
             impViewData = [  "broker" : "",
-                        "ticker" : ""
+                        "ticker" : "",
+                             "name": ""
                      ]
         }else{
             impViewData = delegate.publicData[row]
