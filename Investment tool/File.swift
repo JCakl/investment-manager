@@ -25,21 +25,36 @@ enum Action: String, CaseIterable{
 }
 
 enum Column: String,CaseIterable{
+    case action = "action"
+    case time = "time"
     case broker = "broker"
     case ticker = "ticker"
     case name = "name"
     case cntOfShares = "cnt_of_shares"
     case sharePrice = "share_price"
+    case exRate = "exchange_rate"
     case currencyShare = "currency_share"
     case total = "total"
     case witholdingTax = "witholding_tax"
     case currencyTax = "currency_tax"
     case chargeAmount = "charge_amount"
+    case result = "result"
+    case depositFee = "deposit_fee"
+    case note = "note"
+    case id = "id"
+    case currencyConvFee = "currency_conv_fee"
+    case isin = "isin"
+    case unk = "unk"
 }
 
-enum ColumnPositionTr212: Int, CaseIterable{
-    case ticker = 3
-    case name = 4
+struct Data {
+    var header = ""
+    var lines = [String]()
+}
+
+struct DataContain{
+    var brokerName = [BrokerName]()
+    var ticker = [String]()
 }
 
 func getItemSeparator( fileType: FileType ) -> Separator{
@@ -65,17 +80,6 @@ class File{
     }
 }
 
-struct Data {
-    var header = ""
-    var lines = [String]()
-}
-
-struct DataContain{
-    //var action = [Action]()
-    var brokerName = [BrokerName]()
-    var ticker = [String]()
-}
-
 class Csv:File{
     private let separatorItemInLine:String.Element = ","
     private let lineSeparator:String.Element = "\n"
@@ -83,7 +87,6 @@ class Csv:File{
     fileprivate var broker = Broker()
     
     override init(url: URL, rawData: String) {
-        
         super.init(url: url, rawData: rawData)
         
         // set file data - header and lines
@@ -108,7 +111,7 @@ class Csv:File{
     }
     
     public func getBrokerName() -> BrokerName.RawValue{
-        return broker.getBrokerType(type: broker).rawValue
+        return broker.getBrokerType(/*type: broker*/).rawValue
     }
     
     public func getNumberOfLines() -> Int{
@@ -118,28 +121,13 @@ class Csv:File{
     public func setPublicData( data: inout [[String: String]] ){
         var lineCounter = 0
         data.removeAll()
+        
         for line in fileData.lines {
             var itemCounter = 0
             data.append([Column.broker.rawValue : getBrokerName(), Column.ticker.rawValue : "", Column.name.rawValue : ""] )
             for item in line.split(separator:  getItemSeparator(fileType: FileType.csv).rawValue, omittingEmptySubsequences: false){
-                /*switch(itemCounter){
-                    case  ColumnPositionTr212.ticker.rawValue:
-                        data[lineCounter].updateValue(String(item), forKey: Column.ticker.rawValue)
-                    case ColumnPositionTr212.name.rawValue:
-                        data[lineCounter].updateValue(String(item), forKey: Column.name.rawValue)
-                default:
-                    continue
-                }*/
-                
-                if( itemCounter == 3 ){
-                    data[lineCounter].updateValue(String(item), forKey: Column.ticker.rawValue)
-                }else if( itemCounter == 4 ){
-                    data[lineCounter].updateValue(String(item).replacingOccurrences(of: "\"", with: "", options: NSString.CompareOptions.literal, range: nil), forKey: Column.name.rawValue)
-                }
-                
-                
+                data[lineCounter].updateValue(String(item).replacingOccurrences(of: "\"", with: "", options: NSString.CompareOptions.literal, range: nil), forKey: broker.getHeader()[itemCounter].getColumn().rawValue)
                 itemCounter += 1
-                //print(itemCounter)
             }
             lineCounter += 1
         }

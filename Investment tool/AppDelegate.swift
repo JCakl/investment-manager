@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import AppKit
 
 
 @main
@@ -25,12 +26,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return true
     }
     
+    func errorReadingResults(question: String, text: String) -> Bool {
+
+    let alert = NSAlert()
+    alert.messageText = question
+    alert.informativeText = text
+        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: "Cancel")
+    alert.alertStyle = .warning
+        return alert.runModal() == NSApplication.ModalResponse.alertFirstButtonReturn
+    }
     
     @IBAction func importCSV(_ sender: Any) {
        
         let openPanel = NSOpenPanel()
         openPanel.canChooseFiles = true
-        openPanel.allowsMultipleSelection = true
+        openPanel.allowsMultipleSelection = false
         openPanel.allowedFileTypes = ["csv"]
         
         var files: [File]
@@ -40,18 +51,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 do{
                     var csvFile: Csv = Csv( url: url, rawData : try String(contentsOf: url, encoding: .utf8))
                     
-                    
                     print("Broker Name <\(csvFile.getBrokerName())>")
+                    if(csvFile.getBrokerName() == BrokerName.unknown.rawValue){
+                        let x = errorReadingResults(question: "Error.", text: "Broker is not supported")
+                        return
+                    }
                     
                     csvFile.setPublicData( data:&publicData )
-                    
-                    print(publicData)
-                    
+                                        
                     let nc = NotificationCenter.default
                     
                     nc.post(name: kNotification, object: nil)
-                    
-                    
                 }catch{
                     print("File error, path <\(url.path)>")
                 }
